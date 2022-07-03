@@ -1,33 +1,58 @@
-const li = ["dog", "cat"];
-console.log(li);
-
-const nameArr = ["田中", "山田", "松本"];
-// for (let index = 0; index < nameArr.length; index++) {
-//   console.log(nameArr[index])
-// };
-
-// const nameArr2 = nameArr.map((name) => {
-//   return name;
-// })
-
-// console.log(nameArr2);
-
-// nameArr.map((name) => console.log(name));
-
-//
-
-// 三項演算子
-const val1 = 1 > 0 ? "trueです" : "falseです";
-console.log(val1);
-
-const num = 1300;
-
-const formattedNum =
-  typeof num === "number" ? num.toLocaleString() : "数値を入力してください";
-console.log(formattedNum);
-
-const checkSum = (num1, num2) => {
-  return num1 + num2 > 100 ? "100を超えています" : "許容範囲内です";
+const onClickAdd = () => {
+  const inputText = document.getElementById("add-text").value;
+  document.getElementById("add-text").value = "";
+  createIncompleteList(inputText);
 };
 
-console.log(checkSum(50, 20));
+document
+  .getElementById("add-button")
+  .addEventListener("click", () => onClickAdd());
+
+const deleteFromIncompleteList = (target) => {
+  document.getElementById("imcoplete-list").removeChild(target);
+};
+
+const createIncompleteList = (text) => {
+  const div = document.createElement("div");
+  div.className = "list-row";
+
+  const li = document.createElement("li");
+  li.innerText = text;
+
+  const completeButton = document.createElement("button");
+  completeButton.innerText = "完了";
+  completeButton.addEventListener("click", () => {
+    deleteFromIncompleteList(completeButton.parentNode);
+
+    const addTarget = completeButton.parentNode;
+    const text = addTarget.firstElementChild.innerText;
+    addTarget.textContent = null;
+    const li = document.createElement("li");
+    li.innerText = text;
+    const backButton = document.createElement("button");
+    backButton.innerText = "戻す";
+    backButton.addEventListener("click", () => {
+      const deleteTarget = backButton.parentNode;
+      document.getElementById("complete-list").removeChild(deleteTarget);
+
+      const text = backButton.parentNode.firstElementChild.innerText;
+      createIncompleteList(text);
+    });
+
+    addTarget.appendChild(li);
+    addTarget.appendChild(backButton);
+    document.getElementById("complete-list").appendChild(addTarget);
+  });
+
+  const deleteButton = document.createElement("button");
+  deleteButton.innerText = "削除";
+  deleteButton.addEventListener("click", () => {
+    deleteFromIncompleteList(deleteButton.parentNode);
+  });
+
+  div.appendChild(li);
+  div.appendChild(completeButton);
+  div.appendChild(deleteButton);
+
+  document.getElementById("imcoplete-list").appendChild(div);
+};
